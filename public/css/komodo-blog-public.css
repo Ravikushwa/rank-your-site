@@ -1,0 +1,323 @@
+/**
+ * All of the CSS for your public-facing functionality should be
+ * included in this file.
+ */
+
+ .google-trennds-wrapper {
+    text-align: left;
+}
+.google-trends-head {
+    display: flex;
+    flex-wrap: wrap;
+    grid-gap: 10px;
+    justify-content: space-between;
+    margin: 0 0 15px;
+}
+.google-trends-head .komodo-input .ee-checkbox {
+    margin-bottom: 6px;
+    line-height: 20px;
+}
+.komodo-main-wrapper.komodo-googletrends-page .komodo-container {
+    max-width: 100%;
+    margin-top: 20px;
+    padding: 30px 20px;
+}
+.komodo-accordion {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+.komodo-trend-header, .komodo-container form.form {
+    width: 100%;
+}
+.komodo-accordian-item {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    background: #fff;
+    border: 1px solid #f2f0f0;
+    background: #f6f6f6;
+    border-radius: 6px;
+    overflow: hidden;
+    width: 100%;
+}
+.komodo-accordian-tab {
+    display: none;
+    padding: 15px;
+    border-top: 1px solid #e4e4e4;
+    width: 100%;
+    padding: 20px 20px;
+}
+  .komodo-accordian-title {
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.3s ease;
+    display: grid;
+    grid-template-columns: 1fr 100px 100px;
+    grid-gap: 20px;
+    align-items: center;
+    width: 100%;
+    padding: 30px 20px 20px;
+}
+.komodo-accordian-title:after {
+    content: "+";
+    position: absolute;
+    top: 14px;
+    transform: translateY(-50%);
+    right: 0px;
+    transition: all 0.3s ease;
+    font-size: 22px;
+    background: #e1e1e6;
+    height: 28px;
+    width: 28px;
+    text-align: center;
+    border-radius: 0px 0px 0  10px;
+    line-height: 24px;
+    padding-left: 4px;
+    font-weight: 600;
+}
+.komodo-accordian-title.active:after {
+    content: "-";
+}
+.komodo-accordian-title h2 {
+    font-size: 22px;
+    font-weight: 600;
+    padding: 10px 15px;
+    margin: 0;
+}
+.komodo-trend-thumb {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.komodo-trend-thumb img {
+    height: 100px;
+    width: 100px;
+    object-fit: cover;
+}
+.komodo-trend-thumb h5 {
+    background-image: -webkit-linear-gradient(0, #000000 0, rgba(0, 0, 0, .52) 69%, rgba(0, 0, 0, 0) 100%);
+    background-image: linear-gradient(0, #000000 0, rgba(0, 0, 0, .52) 69%, rgba(0, 0, 0, 0) 100%);
+    color: #ffffff;
+    text-align: center;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    left: 0;
+    font-size: 10px;
+}
+.komodo-google-trend-posts {
+    display: flex;
+    flex-wrap: wrap;
+    grid-gap: 10px 20px;
+}
+.komodo-search-count {
+    color: #474747;
+    font-size: 20px;
+    text-align: center;
+    height: fit-content;
+}
+.komodo-search-count span {
+    font-size: 12px;
+    color: #ababab;
+    text-transform: capitalize;
+}
+.komodo-trend-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 18px;
+    line-height: 30px;
+    display: inline-block;
+    text-decoration: none;
+    font-weight: 700;
+    color: var(--komodo-title-color);
+    box-shadow: none;
+}
+.komodo-accordian-item > .ee-checkbox span {
+    line-height: 20px;
+}
+.komodo-google-trend-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    grid-gap: 20px;
+    color: #696f7a !important;
+    background: #e2e2e2;
+    border-radius: 10px;
+    width: calc(50% - 10px);
+    padding: 10px;
+    text-decoration: none !important;
+}
+.komodo-google-trend-content {
+    box-shadow: none !important;
+}
+.komodo-google-trend-content:hover .komodo-post-content h4 {
+    color: #4a4a4a;
+    transition: all .3s;
+}
+.komodo-google-trend-content img {
+    height: 80px;
+    width: 80px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+.komodo-post-content {
+    width: calc(100% - 100px);
+}
+.komodo-post-content h4 {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 100%;
+    color: #222;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+.komodo-post-content p {
+    margin: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+    overflow: hidden;
+    color: #696f7a !important;
+    font-size: 15px;
+}
+.komodo-post-date {
+    display: block;
+    color: #747775;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0 ;
+}
+.komodo-google-trend-posts h6 {
+    width: 100%;
+    margin: 0;
+    font-size: 14px;
+}
+.komodo-publish-date {
+    display: inline-block;
+    background: #e6e6e6;
+    color: #5a607c;
+    padding: 3px 10px;
+    font-weight: 600;
+    border-radius: 5px;
+    font-size: 12px;
+    margin: 0 0 3px;
+}
+.komodo-google-trend-content .komodo-post-date {
+    color: #4d4f56;
+    font-size: 12px;
+} 
+.ee-checkbox {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    grid-gap: 6px;
+}
+.ee-checkbox input {
+    position: absolute;
+    left: 0;
+    opacity: 0;
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    z-index: 1;
+    cursor: pointer;
+}
+.ee-checkbox label {
+    padding-top: 3px;
+}
+ .ee-checkbox span::before {
+    content: "";
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    flex: none;
+    border: 1px solid #C9C9C9;
+    transition: all 0.3s;
+    display: inline-block;
+    vertical-align: middle;
+}
+.ee-checkbox>span::after {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 3px;
+    width: 8px;
+    height: 4px;
+    border-left: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    transition: all 0.3s;
+    -moz-transform: rotate(-45deg) scale(0);
+    transform: rotate(-45deg) scale(1);
+    opacity: 0;
+}
+.ee-checkbox>input:checked~span::after {
+    opacity: 1;
+    transform: rotate(-45deg) scale(1);
+}
+.ee-checkbox>input:checked~span::before {
+    background: var(--komodo-primary);
+    border: 1px solid var(--komodo-primary);
+}
+.ee-checkbox input:checked ~ span ~ label {
+    color:var(--komodo-primary)
+}
+
+.post-counting {
+    position: absolute;
+    background: #e1e1e6;
+    top: 0;
+    left: 10px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 0px 0px 20px 20px;
+}
+.komodo-trend-info {
+    display: grid;
+    /* grid-template-columns: 15px 1fr; */
+    align-items: flex-start;
+    grid-gap: 10px;
+    padding-left: 15px;
+}
+.komodo-post-date a {
+    color: var(--komodo-title-color);
+    font-weight: 600;
+    text-decoration: none;
+    line-height: 20px;
+}
+.komodo-trend-info .ee-checkbox {
+    margin: 0 0;
+}
+.komodo-treand-title-info p {
+    margin: 0 0 5px;
+    font-size: 14px;
+}
+.komodo-trend-info .ee-checkbox>span::after {
+    top: 10px;
+}
+.google-trends-head .komodo-input {
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    grid-gap: 10px;
+}
+.google-trends-head h4 {
+    margin: 0;
+    font-size: 14px;
+}
+.google-trends-head .komodo-input label {
+    cursor: pointer;
+}
