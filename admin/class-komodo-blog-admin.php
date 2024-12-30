@@ -723,7 +723,13 @@ class Komodo_Blog_Admin {
 	}
 	public function savedcompititiondata(){		
 		global $wpdb;
-		$sql_query = "SELECT * FROM `rys_check_competition_data` ";
+		// $sql_query = "SELECT * FROM `rys_check_competition_data` ";
+		// $competitionData = $wpdb->get_results($sql_query, ARRAY_A);
+
+
+		// Construct the SQL query with dynamic sorting
+		$sql_query = "SELECT * FROM `rys_check_competition_data` ORDER BY cc_id DESC";
+
 		$competitionData = $wpdb->get_results($sql_query, ARRAY_A);
 		require_once KOMODO_BLOGS_PATH . '/admin/partials/backend/savedcompititiondata.php';
 	}
@@ -1205,7 +1211,7 @@ class Komodo_Blog_Admin {
 
 			$data_to_insert = array(
 				'cc_data' =>json_encode($finalPostArray),					
-				'Favorite' =>0,					
+				'Favorite' =>1,					
 			);
 			$data_format = array('%s');	
 			
@@ -1232,74 +1238,117 @@ class Komodo_Blog_Admin {
 			// M END POINT 
 			$MEPoint = !empty(get_option('m_area_end_point'))?get_option('m_area_end_point'):'https://rankyoursites.net/';
 			$checkCreatePost = [];
-			if(isset($_POST['postName']) && isset($_POST['query'])){
-				$query = $_POST['query'];
-					$postName = $_POST['postName'];
+			
+			if(isset($_POST['postName']) && isset($_POST['customPrompt'])){
+
+				if($_POST['customPrompt']==1){
+					$promptNew = $_POST['query'];
+				}else{
+
+					// Get the post name (query) from the form or API call
+					$query = $_POST['postName'];
 					
-					// Initialize cURL session
-					$curl = curl_init();
-		
-					curl_setopt_array($curl, array(
-					CURLOPT_URL => $MEPoint.'oepen-ai-generate-post',
-					CURLOPT_RETURNTRANSFER => true,
-					CURLOPT_ENCODING => '',
-					CURLOPT_MAXREDIRS => 10,
-					CURLOPT_TIMEOUT => 0,
-					CURLOPT_FOLLOWLOCATION => true,
-					CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-					CURLOPT_CUSTOMREQUEST => 'POST',
-					CURLOPT_POSTFIELDS => array('content-query' =>$query),
-					CURLOPT_HTTPHEADER => array(
-						'Bearer: '.$token['access_token'],
-						'Cookie: ci_session=9logcuuj2kkipi8nrnvmm19oceonc3pr'
-					),
-					));
-		
-					$response = curl_exec($curl);
+					// Define the website URL (plugin URL)
+					$pluginUrl = site_url();  // Ensure this variable is set correctly in your WordPress environment
+	
+					// Create the prompt string with dynamic content, preserving the line breaks and formatting
+					$promptNew = "Create a comprehensive blog post of 2500 words titled “" . $query . ": The Ultimate Guide with 10 Delicious Options”. The article should be well structured with clear headings and subheadings, effectively organizing the content for readability. And add the website URL to the focus keyword.\n\n";
+					$promptNew .= "Website URL: " . $pluginUrl . "\n\n";
+					$promptNew .= "**SEO Elements:**\n\n";
+					$promptNew .= "1. **SEO Title:**\n";
+					$promptNew .= "- Start with the focus keyword “" . $query . "”\n";
+					$promptNew .= "- Reflect positive sentiment.\n";
+					$promptNew .= "- Include the power word “Ultimate”.\n";
+					$promptNew .= "- Feature the numerical value “10”.\n\n";
+					$promptNew .= "2. **SEO Meta Description:**\n";
+					$promptNew .= "- Include “" . $query . "”\n";
+					$promptNew .= "- Provide a concise summary that attracts clicks.\n\n";
+					$promptNew .= "3. **URL Structure:**\n";
+					$promptNew .= "- Create a URL that includes “" . $query . ".\n\n";
+					$promptNew .= "**Content Guidelines:**\n\n";
+					$promptNew .= "- Make sure the focus keyword “" . $query . " is mentioned in the first paragraph.\n";
+					$promptNew .= "- Integrate the focus keyword naturally throughout the article to achieve a density of approximately 2.5%, between 63 and 100 mentions in total.\n";
+					$promptNew .= "- Use subheadings (H2, H3, H4) to structure the content, incorporating the focus keyword where relevant.\n";
+					$promptNew .= "- Write short, concise paragraphs to enhance readability.\n";
+					// $promptNew .= "- Include engaging images and/or videos to support the content, specifying the focus keyword as alt text for at least one image.\n\n";
+					$promptNew .= "- Include engaging images and/or videos to support the content, specifying the focus keyword as the alt text for at least one image. The image or video must be a live preview URL.\n\n";
+					$promptNew .= "**External Linking:**\n\n";
+					$promptNew .= "- Include DoFollow links to reputable, relevant external resources that increase the authority of the article.\n\n";
+					$promptNew .= "**Additional Notes:**\n\n";
+					$promptNew .= "- Make sure the content flows smoothly with varied language to avoid repetition.\n";
+					$promptNew .= "- Maintain an overall structure with clear headings and subheadings for easy navigation.\n";
+					$promptNew .= "- The content should be engaging, informative, and optimized for search engines, as well as follow the specified guidelines.\n\n";
+					$promptNew .= "**Final Requirement:**\n\n";
+					$promptNew .= "- Prepare the content with the above specifications, ensuring it is both user-friendly and optimized for search engines.\n\n";
+					$promptNew .= "Generate HTML";
+				}
 				
-					curl_close($curl);
-					
-					// Decode the JSON response
-					$result = json_decode($response, true);
-					$data = json_decode($result['data'], true);
-					
-					if (isset($result['status']) && $result['status']==0) {
-				    	$resp = array('status'=>2,'msg' =>$result['msg']);			
-    					echo json_encode($resp,JSON_UNESCAPED_SLASHES);
-    					die();	
-					} else {
-						// Extract and print the generated content
-						$generated_content = $data['choices'][0]['message']['content'];
-		
-						$post_status = "draft";
-		
-						$current_user_id = get_current_user_id();
-						// Create a new post
-						$post_data = array(
-							'post_title'    => $postName,
-							'post_content'  => $generated_content,
-							'post_status'   => $post_status, // Set post status to 'publish' to make it visible immediately
-							'post_author'   => $current_user_id, // ID of the post author. You can change this to match the desired author.
-							'post_type'     => 'post' // Post type (e.g., 'post', 'page', 'custom_post_type')
-						);
-						
-						//Insert the post into the database
-						$post_id = wp_insert_post($post_data);
-		
-						// Check if the post was inserted successfully
-						if (!is_wp_error($post_id)) {
-							// Post was inserted successfully
-							$URLEDIT = admin_url( 'post.php?post='.$post_id.'&action=edit');
-							array_push($checkCreatePost,array('postId'=>$post_id,'status'=>'Post Creted Success','url'=>admin_url( 'wp-admin/post.php?post='.$post_id.'&action=edit')));						
-						} else {
-							// There was an error inserting the post
-							array_push($checkCreatePost,array('postId'=>$key,'status'=>$post_id->get_error_message()));		
-							$URLEDIT = "";				
-						}
-					}
-					$resp = array('status'=>1,'msg' => ' Successfully created post ','EDITURL'=>$URLEDIT,'postAdded'=>$checkCreatePost);			
+				$postName = $_POST['postName'];
+				
+				// Initialize cURL session
+				$curl = curl_init();
+	
+				curl_setopt_array($curl, array(
+				CURLOPT_URL => $MEPoint.'oepen-ai-generate-post',
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_ENCODING => '',
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 0,
+				CURLOPT_FOLLOWLOCATION => true,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => 'POST',
+				CURLOPT_POSTFIELDS => array('content-query' =>$promptNew),
+				CURLOPT_HTTPHEADER => array(
+					'Bearer: '.$token['access_token'],
+					'Cookie: ci_session=9logcuuj2kkipi8nrnvmm19oceonc3pr'
+				),
+				));
+	
+				$response = curl_exec($curl);
+			
+				curl_close($curl);
+				
+				// Decode the JSON response
+				$result = json_decode($response, true);
+				$data = json_decode($result['data'], true);
+				
+				if (isset($result['status']) && $result['status']==0) {
+					$resp = array('status'=>2,'msg' =>$result['msg']);			
 					echo json_encode($resp,JSON_UNESCAPED_SLASHES);
 					die();	
+				} else {
+					// Extract and print the generated content
+					$generated_content = $data['choices'][0]['message']['content'];
+					
+					$post_status = "draft";
+	
+					$current_user_id = get_current_user_id();
+					// Create a new post
+					$post_data = array(
+						'post_title'    => $postName,
+						'post_content'  => $generated_content,
+						'post_status'   => $post_status, // Set post status to 'publish' to make it visible immediately
+						'post_author'   => $current_user_id, // ID of the post author. You can change this to match the desired author.
+						'post_type'     => 'post' // Post type (e.g., 'post', 'page', 'custom_post_type')
+					);
+					
+					//Insert the post into the database
+					$post_id = wp_insert_post($post_data);
+	
+					// Check if the post was inserted successfully
+					if (!is_wp_error($post_id)) {
+						// Post was inserted successfully
+						$URLEDIT = admin_url( 'post.php?post='.$post_id.'&action=edit');
+						array_push($checkCreatePost,array('postId'=>$post_id,'status'=>'Post Creted Success','url'=>admin_url( 'wp-admin/post.php?post='.$post_id.'&action=edit')));						
+					} else {
+						// There was an error inserting the post
+						array_push($checkCreatePost,array('postId'=>$key,'status'=>$post_id->get_error_message()));		
+						$URLEDIT = "";				
+					}
+				}
+				$resp = array('status'=>1,'msg' => ' Successfully created post ','EDITURL'=>$URLEDIT,'postAdded'=>$checkCreatePost);			
+				echo json_encode($resp,JSON_UNESCAPED_SLASHES);
+				die();	
 			}else{
 				$finalPostArray = [];
 				foreach ($_POST['CheckCompetion'] as $key => $value) {

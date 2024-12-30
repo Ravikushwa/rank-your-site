@@ -9,14 +9,14 @@
  * that starts the plugin.
  *`
  * @link              https://rankyoursites.net/wp/wp-admin/
- * @since             1.0.2
+ * @since             1.0.3
  * @package           RankYourSites
  *
  * @wordpress-plugin
  * Plugin Name:       Rank Your Site
  * Plugin URI:        https://rankyoursites.net/wp/wp-admin/
  * Description:       Google Ads Planner Seed Keywords 
- * Version:           1.0.1
+ * Version:           1.0.3
  * Author:            #`
  * Author URI:        https://rankyoursites.net/wp/wp-admin/
  * License:           GPL-2.0+

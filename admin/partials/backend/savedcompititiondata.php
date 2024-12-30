@@ -185,8 +185,13 @@
             </div>
             <div class="komodo-custom-modal-body">
                 <form class="form" method="post">
-                    <div class="komodo-input">
-                        <input type="text" name="google-genarate-post-content-query" class="komodo-input google-genarate-post-content regular-text require" placeholder="Please Enter Prompt">
+                    <div class="ee-checkbox">
+                        <input class="custom-prompt" type="checkbox" name="customPrompt" >
+                        <span>Custom Prompt </span>
+                    </div>                    
+                    
+                    <div class="komodo-input custom-prompt-fild-add">
+                        
                     </div>
                     <a href="javascript:void(0);" action="OepenAiGeneratePost" id="google-genarate-post" class="komodo-btn google-genarate-post">Create Post</a>
                 </form>

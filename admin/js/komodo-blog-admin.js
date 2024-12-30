@@ -659,10 +659,32 @@
 			var obj = $(this);
 			obj.text('Please Wait...!');
 			$('.komodo-preloader').removeClass('komodo-el-hidden');
+			
+			// Prepare FormData for AJAX
 			var formdata = new FormData();
-			formdata.append('action',obj.attr('action'));		
-			formdata.append('postName',$('.Generating-post-name').text());		
-			formdata.append('query',$('.google-genarate-post-content').val());		
+			formdata.append('action', obj.attr('action'));        
+			formdata.append('postName', $('.Generating-post-name').text());        
+			
+			// Check if custom prompt checkbox is checked
+			if ($('.custom-prompt').prop('checked')) {
+				// Append custom prompt and query if checked
+				formdata.append('customPrompt', 1); // Pass the custom prompt state (1 for checked)
+
+				var queryValue = $('.google-genarate-post-content').val().trim();
+				if (queryValue === "") {
+					// If query is empty, show an error and stop the AJAX request
+					ME_alert_message("Please enter a prompt before submitting.", 'rys-error');
+					obj.text('Create Post');
+					$('.komodo-preloader').addClass('komodo-el-hidden');
+					return;  // Exit the function and prevent AJAX request
+				}
+				
+				formdata.append('query', $('.google-genarate-post-content').val()); 
+			} else {
+				// Handle case when checkbox is not checked
+				formdata.append('customPrompt', 0); // You can append 0 to indicate it’s unchecked
+			}
+		
 			$.ajax({
 				method: "POST",
 				url: ajaxurl,
@@ -1383,5 +1405,18 @@
             }
         })
 	});
+	$(document).on('change', '.custom-prompt', function() {
+       
+        var customFieldContainer = $('.custom-prompt-fild-add');        
+        var customField = `<input type="text" name="google-genarate-post-content-query" class="komodo-input google-genarate-post-content regular-text" placeholder="Please Enter Prompt">`;
+       
+        if ($(this).prop('checked')) {
+            // If checkbox is checked, add the custom input field
+            customFieldContainer.html(customField);
+        } else {
+            // If checkbox is unchecked, remove the custom input field
+            customFieldContainer.html('');
+        }
+    });
 
 })( jQuery );

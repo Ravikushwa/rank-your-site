@@ -260,7 +260,7 @@ function komodo_render_meta_box( $post ){
                     </ul>
                 </div>
             </div>
-            <?php
+            <?php 
 
             $post_id = isset($_GET['post']) ? $_GET['post'] : (isset($_POST['post_ID']) ? $_POST['post_ID'] : 0);
             $post = get_post($post_id);
@@ -293,15 +293,26 @@ function komodo_render_meta_box( $post ){
             // Check image alt tag
             $pattern = '/<img[^>]+alt=["\']([^"\']+)["\'][^>]*>/i';
             if (preg_match_all($pattern, $post_content, $matches, PREG_SET_ORDER)) {
+                
+                $matches_div = $matches;               
                 foreach ($matches as $match) {
-                    $alt_text = $match[1];
+                    //$alt_text = $match;
                     if(!empty($focuskeywordarr[0])){
                         $keyword1 = str_replace(' ', '-', $focuskeywordarr[0]);
                         $keyword2 = str_replace(' ', '_', $focuskeywordarr[0]);
-                        if($alt_text == $focuskeywordarr[0] || $alt_text == $keyword1 || $alt_text == $keyword2){
-                            $focusimg = 1;
+                        
+                        if(in_array($focuskeywordarr[0], $match) || in_array($keyword1, $match) || in_array($keyword2, $match)){
+                            if($focusimgkey == "false"){
+                                $focusimg = 1;
+                            }
                         }
                     }
+                }
+            }
+            
+            if(empty($matches_div)){
+                if($focusimgkey == "true"){
+                    $focusimg = 0;
                 }
             }
 
@@ -1064,6 +1075,8 @@ function komodo_check_postcontent(){
                     }
                 }else{
                     if($firstfocuskey == "true"){
+                        $li = "test";
+                        $firstfocuskey = "false";
                         $firstfocus = 0;
                         $basicseo = $basicseo + 1;
                     }
@@ -1094,16 +1107,19 @@ function komodo_check_postcontent(){
                 if($wordCount > 600){
                     $wordCountvar = 1;
 					$worddesc = 'Content is '. esc_html($wordCount).' words long. Good job!';
-                    if($wordCountkey == false){
+                    if($wordCountkey == "false"){
                         if(!empty($basicseo)){
                             $basicseo = $basicseo - $wordCountvar;
                         }
                     }
-                }else{
-                    $wordCountvar = 1;
-					$worddesc = 'Content is '. esc_html($wordCount).' Consider using at least 600 words.';
-                    if($wordCountkey == true){
+                }
+                else{
                     $wordCountvar = 0;
+                    $li = $wordCountkey;
+				 	$worddesc = 'Content is '. esc_html($wordCount).' Consider using at least 600 words.';
+                    if($wordCountkey == "true"){
+                        $li2 = "testdddd";
+                        $wordCountvar = 0;
                         $basicseo = $basicseo + 1;
                     }
                 }
@@ -1122,20 +1138,15 @@ function komodo_check_postcontent(){
                 foreach ($search_tags as $tag) {
                     $pattern = '/<'.$tag.'[^>]*>(.*?)<\/'.$tag.'>/is';
                     if (preg_match_all($pattern, $content, $matches)) {
+                        //$h2_arr[] = $matches[1];
                         foreach ($matches[1] as $h2_content) {
-                            // if($focuskey == "false"){
-                            //     $focus = 1;
-                            //     if(!empty($adfinalseo)){
-                            //         $adfinalseo = $adfinalseo - $focus;
-                            //     }
-                            // }
-                            // break;
-
+                            $h2_arr[] = $h2_content;
                             if(!empty($keyarr[0])){
                                 $keyword1 = str_replace(' ', '-', $keyarr[0]);
                                 $keyword2 = str_replace(' ', '_', $keyarr[0]);
                                 if(strpos($h2_content, $keyarr[0]) !== false || strpos($h2_content, $keyword1) !== false || strpos($h2_content, $keyword2 ) !== false ){
                                     if($focuskey == "false"){
+                                        $focuskey = "true";
                                         $focus = 1;
                                         if(!empty($adfinalseo)){
                                             $adfinalseo = $adfinalseo - $focus;
@@ -1144,11 +1155,14 @@ function komodo_check_postcontent(){
                                 }else{
                                     if($focuskey == "true"){
                                         $focus = 0;
+                                        $focuskey = "false";
                                         $adfinalseo = $adfinalseo + 1;
                                     }
                                 }
                             }
-                            break;
+                            if($focus == 1){
+                                break;
+                            }
                         }
                     }
                 }
@@ -1162,24 +1176,27 @@ function komodo_check_postcontent(){
 
                 // Check image alt tag
                 $pattern = '/<img[^>]+alt=["\']([^"\']+)["\'][^>]*>/i';
-                // Check image alt tag
-                $pattern = '/<img[^>]+alt=["\']([^"\']+)["\'][^>]*>/i';
-                if (preg_match_all($pattern, $post_content, $matches, PREG_SET_ORDER)) {
+                if (preg_match_all($pattern, stripcslashes($content), $matches)) {
+                    $matches_div = $matches;               
                     foreach ($matches as $match) {
-                        $alt_text = $match[1];
-                        if(!empty($focuskeywordarr[0])){
-                            $keyword1 = str_replace(' ', '-', $focuskeywordarr[0]);
-                            $keyword2 = str_replace(' ', '_', $focuskeywordarr[0]);
-                            if($alt_text == $focuskeywordarr[0] || $alt_text == $keyword1 || $alt_text == $keyword2){
-                                $focusimg = 1;
+                        //$alt_text = $match;
+                        if(!empty($keyarr[0])){
+                            $keyword1 = str_replace(' ', '-', $keyarr[0]);
+                            $keyword2 = str_replace(' ', '_', $keyarr[0]);
+                            
+                            if(in_array($keyarr[0], $match) || in_array($keyword1, $match) || in_array($keyword2, $match)){
+                                if($focusimgkey == "false"){
+                                    $focusimg = 1;
+                                    $adfinalseo = $adfinalseo - 1;
+                                }
                             }
                         }
                     }
-                    if(empty($matches)){
-                        if($focusimgkey == "true"){
-                            $focusimg = 0;
-                            $adfinalseo = $adfinalseo + 1;
-                        }
+                }
+                if(empty($matches_div)){
+                    if($focusimgkey == "true"){
+                        $focusimg = 0;
+                        $adfinalseo = $adfinalseo + 1;
                     }
                 }
 
@@ -1299,7 +1316,7 @@ function komodo_check_postcontent(){
                 }
             }
 
-            $res = array('status'=>true, 'basicseo'=>$basicseo, 'adfinalseo'=>$adfinalseo, 'contentreadability'=>$contentreadability, 'basicdesc'=>$basicdesc, 'firstfocus'=>$firstfocus, 'urlfocus'=>$urlfocus, 'wordCountvar'=>$wordCountvar, 'focus'=>$focus, 'focusimg'=>$focusimg, 'keyworddensity'=> $keyworddensity, 'externallinkfound'=>$externallinkfound, 'imgcontain'=>$imgcontain, 'paragraph_readability'=>$paragraph_readability, 'keywordtext'=> $keywordtext, 'worddesc'=>$worddesc, 'test'=>$hello );
+            $res = array('status'=>true, 'basicseo'=>$basicseo, 'adfinalseo'=>$adfinalseo, 'contentreadability'=>$contentreadability, 'basicdesc'=>$basicdesc, 'firstfocus'=>$firstfocus, 'urlfocus'=>$urlfocus, 'wordCountvar'=>$wordCountvar, 'focus'=>$focus, 'focusimg'=>$focusimg, 'keyworddensity'=> $keyworddensity, 'externallinkfound'=>$externallinkfound, 'imgcontain'=>$imgcontain, 'paragraph_readability'=>$paragraph_readability, 'keywordtext'=> $keywordtext, 'worddesc'=>$worddesc, 'test'=>$li, 'test2'=>$li2 );
         }
     }else{
         $basicseo = 5;
@@ -1787,18 +1804,27 @@ function my_admin_footer_function(){
                 // Check image alt tag
                 $pattern = '/<img[^>]+alt=["\']([^"\']+)["\'][^>]*>/i';
                 if (preg_match_all($pattern, $post_content, $matches, PREG_SET_ORDER)) {
+                    $matches_div = $matches;               
                     foreach ($matches as $match) {
-                        $alt_text = $match[1];
+                        //$alt_text = $match;
                         if(!empty($focuskeywordarr[0])){
                             $keyword1 = str_replace(' ', '-', $focuskeywordarr[0]);
                             $keyword2 = str_replace(' ', '_', $focuskeywordarr[0]);
-                            if($alt_text == $focuskeywordarr[0] || $alt_text == $keyword1 || $alt_text == $keyword2){
-                                $focusimg = 1;
+                            
+                            if(in_array($focuskeywordarr[0], $match) || in_array($keyword1, $match) || in_array($keyword2, $match)){
+                                //if($focusimgkey == "false"){
+                                    $focusimg = 1;
+                                //}
                             }
                         }
                     }
                 }
-
+                
+                if(empty($matches_div)){
+                    //if($focusimgkey == "true"){
+                        $focusimg = 0;
+                    //}
+                }
                 // Keyword Density
                 if(!empty($post_content)){
                 
@@ -2207,3 +2233,22 @@ function komodo_save_metadata(){
     }
 	die();
 }
+
+/**
+ * Add social sharing option on blog single
+ */
+function komodo_add_to_content( $content ) {    
+    if( is_single() ) {
+        $content .= '<div class="komodo_share_text">
+						<h1>'. esc_html__('Share With','miraculous').'</h1>
+						<ul>
+							<li><a href="https://www.facebook.com/sharer/sharer.php?u='.urlencode(get_the_permalink(get_the_ID())).'" class="komodo_share_facebook" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+							<li><a href="https://www.linkedin.com/shareArticle?mini=true&url='.urlencode(get_the_permalink(get_the_ID())).'" class="komodo_share_linkedin" target="_blank"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
+							<li><a href="https://twitter.com/intent/tweet?text='.urlencode(get_the_permalink(get_the_ID())).'" class="komodo_share_twitter" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+							<li><a href="https://api.whatsapp.com/send?text='.urlencode(get_the_permalink(get_the_ID())).'" class="komodo_share_whatsapp" target="_blank"><i class="fa fa-whatsapp" aria-hidden="true"></i></a></li>
+						</ul>
+					</div>';
+    }
+    return $content;
+}
+add_filter( 'the_content', 'komodo_add_to_content' );

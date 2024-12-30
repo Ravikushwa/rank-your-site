@@ -130,6 +130,7 @@
                         <button type='button' action="SaveDataActivity" ac-type="saveData" class='komodo-btn Check-google-planner-saveData komodo-el-hidden w-50'>Save Data</button>
                         <button type='button' ac-type="CreatePost" action="OepenAiGeneratePost" class='komodo-btn Check-google-planner-createPost komodo-el-hidden w-50'>Create Post</button>
                     </form>
+                    <a href="<?=site_url()."/wp-admin/admin.php?page=saved-compitition-data";?>">Go TO Saved Keyword</a>
                 </div>
             </div>
         </div>

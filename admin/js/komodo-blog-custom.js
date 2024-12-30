@@ -1,6 +1,6 @@
 (function($) {
     $(document).ready(function() {
-
+ 
         /**
          * Prevent Default on focus
          */ 
@@ -1563,6 +1563,7 @@
                     'imgcontainkey'     : imgcontainkey
                 },
                 success: function(response){
+                    console.log(response);
                     if(response == 'null'){
                         //console.log("test");
                     }else{
@@ -1762,5 +1763,5 @@
             }
         });
     }
-
+    
 })(jQuery);
